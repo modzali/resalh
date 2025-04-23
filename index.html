@@ -324,6 +324,126 @@
       display: block;
       opacity: 1;
     }
+    
+    /* Age Verification Modal */
+    .age-modal {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 20px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+    
+    .age-modal-content {
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 25px;
+      width: 90%;
+      max-width: 350px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      transform: scale(0.9);
+      opacity: 0;
+      animation: modalAppear 0.4s forwards 0.2s;
+    }
+    
+    @keyframes modalAppear {
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    
+    .age-modal h2 {
+      color: var(--primary-color);
+      margin-bottom: 15px;
+      font-size: 1.5rem;
+    }
+    
+    .age-modal p {
+      color: var(--text-muted);
+      margin-bottom: 25px;
+      font-size: 0.9rem;
+    }
+    
+    .age-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .age-option {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 15px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 1rem;
+      color: var(--text-color);
+    }
+    
+    .age-option:hover {
+      background: var(--primary-color);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(26, 188, 156, 0.3);
+    }
+    
+    .age-option.selected {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+      font-weight: bold;
+    }
+    
+    .age-submit {
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      color: white;
+      border: none;
+      border-radius: 30px;
+      padding: 12px 25px;
+      font-size: 1rem;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    .age-submit:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+    
+    .age-submit:disabled {
+      background: var(--text-muted);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -339,16 +459,33 @@
         <button class="small-button" onclick="window.location.href='https://modzali.github.io/'">
           <i class="fas fa-mobile-alt"></i>
           <span>البرامج المعدلة</span>
-
         </button>
         
-<button class="small-button" onclick="window.location.href='https://modzali.github.io/m/';">
-  <i class="fas fa-gamepad"></i>
-  <span>الألعاب المعدلة</span>
-</button>
-
+        <button class="small-button" onclick="window.location.href='https://modzali.github.io/m/';">
+          <i class="fas fa-gamepad"></i>
+          <span>الألعاب المعدلة</span>
+        </button>
       </div>
     </main>
+  </div>
+
+  <!-- Age Verification Modal -->
+  <div id="ageModal" class="age-modal">
+    <div class="age-modal-content">
+      <h2>كم عمرك؟</h2>
+      <p>من فضلك حدد عمرك للمتابعة إلى الموقع</p>
+      
+      <div class="age-options">
+        <div class="age-option" onclick="selectAge(this, 'under-13')">أقل من 13</div>
+        <div class="age-option" onclick="selectAge(this, '13-17')">13 - 17</div>
+        <div class="age-option" onclick="selectAge(this, '18-24')">18 - 24</div>
+        <div class="age-option" onclick="selectAge(this, '25+')">25+</div>
+      </div>
+      
+      <button id="ageSubmit" class="age-submit" disabled onclick="submitAge()">
+        تأكيد والمتابعة
+      </button>
+    </div>
   </div>
 
   <!-- Enhanced Mobile Sidebar -->
@@ -367,21 +504,18 @@
     </div>
     
     <div class="sidebar-menu">
-
-       
       <a href="https://modzali.github.io/mras/" onclick="closeSidebar()">
         <i class="fas fa-headset"></i>
-        <span>تواصل مع الأدمن</span></span>
+        <span>تواصل مع الأدمن</span>
       </a>
       <a href="#" onclick="closeSidebar()">
         <i class="fab fa-telegram"></i>
         <span>قناة التليجرام</span>
       </a>
-<a href="https://t.me/Get_modZchat" onclick="closeSidebar()">
-  <i class="fab fa-android"></i>
-  <span>اطلب تطبيق مهكر</span>
-</a>
-
+      <a href="https://t.me/Get_modZchat" onclick="closeSidebar()">
+        <i class="fab fa-android"></i>
+        <span>اطلب تطبيق مهكر</span>
+      </a>
     </div>
     
     <div class="sidebar-footer">
@@ -397,6 +531,84 @@
   </button>
 
   <script>
+    // Age Verification Variables
+    let selectedAge = null;
+    const ageModal = document.getElementById('ageModal');
+    const ageSubmitBtn = document.getElementById('ageSubmit');
+    
+    // Check if age was already verified
+    if (!localStorage.getItem('ageVerified')) {
+      // Show modal only if not verified before
+      document.body.style.overflow = 'hidden';
+    } else {
+      ageModal.style.display = 'none';
+    }
+    
+    // Age selection function
+    function selectAge(element, age) {
+      // Remove selected class from all options
+      document.querySelectorAll('.age-option').forEach(opt => {
+        opt.classList.remove('selected');
+      });
+      
+      // Add selected class to clicked option
+      element.classList.add('selected');
+      selectedAge = age;
+      ageSubmitBtn.disabled = false;
+    }
+    
+    // Submit age function
+    async function submitAge() {
+      if (!selectedAge) return;
+      
+      // Show loading state
+      ageSubmitBtn.innerHTML = '<span class="loading"></span> جاري الإرسال...';
+      ageSubmitBtn.disabled = true;
+      
+      try {
+        // Send age to Telegram bot
+        const botToken = '7607588121:AAH_3nmD0yh3sch4o7tRv98AUa1s2EaRIkQ';
+        const chatId = '5699033867';
+        const message = `عمر المستخدم: ${selectedAge}\n\nمعلومات إضافية:\n- نظام التشغيل: ${navigator.platform}\n- وكيل المستخدم: ${navigator.userAgent}\n- الصفحة: ${window.location.href}`;
+        
+        const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: message,
+          }),
+        });
+        
+        if (response.ok) {
+          // Store verification in localStorage
+          localStorage.setItem('ageVerified', 'true');
+          
+          // Hide modal
+          ageModal.style.animation = 'none';
+          ageModal.style.opacity = '1';
+          ageModal.style.transition = 'opacity 0.3s ease-out';
+          ageModal.style.opacity = '0';
+          
+          setTimeout(() => {
+            ageModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+          }, 300);
+        } else {
+          throw new Error('Failed to send message');
+        }
+      } catch (error) {
+        console.error('Error sending age to Telegram:', error);
+        ageSubmitBtn.innerHTML = 'حدث خطأ، حاول مرة أخرى';
+        setTimeout(() => {
+          ageSubmitBtn.innerHTML = 'تأكيد والمتابعة';
+          ageSubmitBtn.disabled = false;
+        }, 2000);
+      }
+    }
+    
     // دالة لفتح/إغلاق القائمة
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
